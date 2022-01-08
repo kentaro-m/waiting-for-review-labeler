@@ -2,8 +2,6 @@ name: Review Time Alert
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '*/2 * * * *'
 
 permissions:
   pull-requests: write

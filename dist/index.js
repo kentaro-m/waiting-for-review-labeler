@@ -50,7 +50,7 @@ function run() {
             const labelName = core.getInput('label-name', {
                 required: true
             });
-            const token = core.getInput('repo-token', { required: true });
+            const token = core.getInput('repo-token', { required: false });
             const octokit = github.getOctokit(token);
             const context = github.context;
             const repoWithOwner = `${context.repo.owner}/${context.repo.repo}`;

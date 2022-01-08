@@ -2,6 +2,10 @@ name: 'Review Time Alert'
 description: 'Provide a description here'
 author: 'kentaro-m'
 inputs:
+  repo-token:
+    description: 'Token for the repository. Can be passed in using `{{ secrets.GITHUB_TOKEN }}`.'
+    required: false
+    default: ${{ github.token }}
   hours-before-label-add:
     required: true
     description: 'input description here'

@@ -1,7 +1,8 @@
 name: Review Time Alert
 
-schedule:
-  - cron: '*/2 * * * *'
+on:
+  schedule:
+    - cron: '*/2 * * * *'
 
 permissions:
   issues: write

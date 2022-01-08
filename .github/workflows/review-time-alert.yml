@@ -6,7 +6,7 @@ on:
     - cron: '*/2 * * * *'
 
 permissions:
-  issues: write
+  pull-requests: write
 
 jobs:
   action:

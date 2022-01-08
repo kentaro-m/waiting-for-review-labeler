@@ -10,7 +10,7 @@ jobs:
   action:
     runs-on: ubuntu-latest
     steps:
-      - uses: kentaro-m/review-time-alert@main
+      - uses: kentaro-m/review-time-alert@24f77d9d7b517c07ee2dbb2c524f39f2a674d1e7
         with:
           hours-before-label-add: 1
           label-name: 'waiting for review'

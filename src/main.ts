@@ -1,6 +1,5 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-import type {GraphQlQueryResponse} from '@octokit/graphql/dist-types/types'
 import dayjs from 'dayjs'
 
 type QueryResponse = {
@@ -33,7 +32,7 @@ async function run(): Promise<void> {
     const octokit = github.getOctokit(token)
     const context = github.context
     const repoWithOwner = `${context.repo.owner}/${context.repo.repo}`
-    const response = await octokit.graphql<GraphQlQueryResponse<QueryResponse>>(
+    const response = await octokit.graphql<QueryResponse>(
       `fragment pr on PullRequest {
         ... on PullRequest {
           number
@@ -63,7 +62,7 @@ async function run(): Promise<void> {
     core.debug('fetch pull request data:')
     core.debug(JSON.stringify(response))
 
-    const pullRequests = response.data.search.nodes
+    const pullRequests = response.search.nodes
 
     if (pullRequests.length === 0) {
       return

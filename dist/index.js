@@ -79,7 +79,7 @@ function run() {
             });
             core.debug('fetch pull request data:');
             core.debug(JSON.stringify(response));
-            const pullRequests = response.data.search.nodes;
+            const pullRequests = response.search.nodes;
             if (pullRequests.length === 0) {
                 return;
             }

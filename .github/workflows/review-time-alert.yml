@@ -1,0 +1,17 @@
+name: Review Time Alert
+
+schedule:
+  - cron: '*/2 * * * *'
+
+permissions:
+  issues: write
+
+jobs:
+  action:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: kentaro-m/review-time-alert@main
+        with:
+          hours-before-label-add: 1
+          label-name: 'waiting for review'
+

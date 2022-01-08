@@ -89,7 +89,10 @@ function run() {
                     ? pullRequest.createdAt
                     : pullRequest.timelineItems.nodes[0].createdAt;
                 const readyForReviewAt = (0, dayjs_1.default)(createdAt);
-                const diff = readyForReviewAt.diff('hour');
+                const now = (0, dayjs_1.default)();
+                core.debug(`ready for review at: ${readyForReviewAt.toISOString()}`);
+                core.debug(`now: ${now.toISOString()}`);
+                const diff = now.diff(readyForReviewAt, 'hour');
                 core.debug(`waiting time for review: ${diff}`);
                 if (diff < parseInt(hoursBeforeLabelAdd, 10)) {
                     return;

@@ -75,7 +75,10 @@ async function run(): Promise<void> {
             ? pullRequest.createdAt
             : pullRequest.timelineItems.nodes[0].createdAt
         const readyForReviewAt = dayjs(createdAt)
-        const diff = readyForReviewAt.diff('hour')
+        const now = dayjs()
+        core.debug(`ready for review at: ${readyForReviewAt.toISOString()}`)
+        core.debug(`now: ${now.toISOString()}`)
+        const diff = now.diff(readyForReviewAt, 'hour')
         core.debug(`waiting time for review: ${diff}`)
 
         if (diff < parseInt(hoursBeforeLabelAdd, 10)) {

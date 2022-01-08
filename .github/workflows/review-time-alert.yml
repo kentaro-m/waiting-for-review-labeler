@@ -12,6 +12,6 @@ jobs:
     steps:
       - uses: kentaro-m/review-time-alert@main
         with:
-          hours-before-label-add: 1
+          hours-before-label-add: 2
           label-name: 'waiting for review'
 

@@ -59,6 +59,10 @@ async function run(): Promise<void> {
         q: `is:pr is:open draft:false repo:${repoWithOwner}`
       }
     )
+
+    core.debug('fetch pull request data:')
+    core.debug(JSON.stringify(response))
+
     const pullRequests = response.data.search.nodes
 
     if (pullRequests.length === 0) {
@@ -73,6 +77,7 @@ async function run(): Promise<void> {
             : pullRequest.timelineItems.nodes[0].createdAt
         const readyForReviewAt = dayjs(createdAt)
         const diff = readyForReviewAt.diff('hour')
+        core.debug(`waiting time for review: ${diff}`)
 
         if (diff < parseInt(hoursBeforeLabelAdd, 10)) {
           return
@@ -81,6 +86,9 @@ async function run(): Promise<void> {
         return pullRequest
       })
       .filter(v => v !== undefined)
+
+    core.debug('get target pull request data:')
+    core.debug(JSON.stringify(targetPullRequests))
 
     for (const pullRequest of targetPullRequests) {
       pullRequest?.number &&

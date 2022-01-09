@@ -11,7 +11,7 @@ inputs:
     description: 'input description here'
     default: 24
   label-name:
-    required: true
+    required: false
     description: 'input description here'
     default: 'waiting for review'
 runs:

@@ -26,7 +26,7 @@ async function run(): Promise<void> {
       required: true
     })
     const labelName = core.getInput('label-name', {
-      required: true
+      required: false
     })
     const token = core.getInput('repo-token', {required: false})
     const octokit = github.getOctokit(token)

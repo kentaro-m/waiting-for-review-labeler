@@ -111,6 +111,9 @@ function run() {
                 return;
             }
             const targetPullRequests = getTargetPullRequests(pullRequests, hoursBeforeLabelAdd, skipProcess === 'true');
+            if (!targetPullRequests || targetPullRequests.length === 0) {
+                return;
+            }
             core.debug('get target pull request data:');
             core.debug(JSON.stringify(targetPullRequests));
             for (const pullRequest of targetPullRequests) {

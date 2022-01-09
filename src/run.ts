@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 
 type QueryResponse = {
   search: {
-    nodes: PullRequest[] | []
+    nodes: PullRequest[]
   }
 }
 
@@ -117,6 +117,10 @@ export async function run(): Promise<void> {
       hoursBeforeLabelAdd,
       skipProcess === 'true'
     )
+
+    if (!targetPullRequests || targetPullRequests.length === 0) {
+      return
+    }
 
     core.debug('get target pull request data:')
     core.debug(JSON.stringify(targetPullRequests))

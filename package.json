@@ -2,7 +2,7 @@
   "name": "waiting-for-review-labeler",
   "version": "0.0.0",
   "private": true,
-  "description": "TypeScript template action",
+  "description": "An action for adding label to a pull request after it being opened or ready for review for more than certain hours.",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",

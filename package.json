@@ -1,5 +1,5 @@
 {
-  "name": "typescript-action",
+  "name": "waiting-for-review-labeler",
   "version": "0.0.0",
   "private": true,
   "description": "TypeScript template action",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
+    "url": "git+https://github.com/kentaro-m/waiting-for-review-labeler.git"
   },
   "keywords": [
     "actions",

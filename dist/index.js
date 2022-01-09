@@ -50,6 +50,9 @@ function run() {
             const labelName = core.getInput('label-name', {
                 required: false
             });
+            const skipProcess = core.getInput('skip-approved-pull-request', {
+                required: false
+            });
             const token = core.getInput('repo-token', { required: false });
             const octokit = github.getOctokit(token);
             const context = github.context;
@@ -95,6 +98,9 @@ function run() {
                 const diff = now.diff(readyForReviewAt, 'hour');
                 core.debug(`waiting time for review: ${diff}`);
                 if (diff < parseInt(hoursBeforeLabelAdd, 10)) {
+                    return;
+                }
+                if (skipProcess && pullRequest.reviewDecision === 'APPROVED') {
                     return;
                 }
                 return pullRequest;

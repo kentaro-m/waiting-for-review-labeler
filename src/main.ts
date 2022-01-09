@@ -11,6 +11,7 @@ type QueryResponse = {
 type PullRequest = {
   number: number
   createdAt: string
+  reviewDecision: 'APPROVED' | 'CHANGES_REQUESTED' | 'REVIEW_REQUIRED' | null
   timelineItems: {
     nodes:
       | {
@@ -26,6 +27,9 @@ async function run(): Promise<void> {
       required: true
     })
     const labelName = core.getInput('label-name', {
+      required: false
+    })
+    const skipProcess = core.getInput('skip-approved-pull-request', {
       required: false
     })
     const token = core.getInput('repo-token', {required: false})
@@ -82,6 +86,10 @@ async function run(): Promise<void> {
         core.debug(`waiting time for review: ${diff}`)
 
         if (diff < parseInt(hoursBeforeLabelAdd, 10)) {
+          return
+        }
+
+        if (skipProcess && pullRequest.reviewDecision === 'APPROVED') {
           return
         }
 

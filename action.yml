@@ -14,6 +14,10 @@ inputs:
     required: false
     description: 'input description here'
     default: 'waiting for review'
+  skip-approved-pull-request:
+    required: false
+    description: 'input description here'
+    default: false
 runs:
   using: 'node12'
   main: 'dist/index.js'

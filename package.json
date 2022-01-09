@@ -22,7 +22,7 @@
     "node",
     "setup"
   ],
-  "author": "",
+  "author": "kentaro-m",
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.6.0",

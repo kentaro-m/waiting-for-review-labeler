@@ -65,6 +65,29 @@ const getTargetPullRequests = (pullRequests, hoursBeforeLabelAdd, skipApprovedPu
     })
         .filter(v => v !== undefined);
 };
+const query = `
+fragment pr on PullRequest {
+  ... on PullRequest {
+    number
+    createdAt
+    timelineItems(itemTypes: READY_FOR_REVIEW_EVENT, first: 1) {
+      nodes {
+        ... on ReadyForReviewEvent {
+          createdAt
+        }
+      }
+    }
+  }
+}
+
+query ($q: String!, $limit: Int = 20) {
+  search(first: $limit, type: ISSUE, query: $q) {
+    nodes {
+      ...pr
+    }
+  }
+}
+`;
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -81,27 +104,7 @@ function run() {
             const octokit = github.getOctokit(token);
             const context = github.context;
             const repoWithOwner = `${context.repo.owner}/${context.repo.repo}`;
-            const response = yield octokit.graphql(`fragment pr on PullRequest {
-        ... on PullRequest {
-          number
-          createdAt
-          timelineItems(itemTypes: READY_FOR_REVIEW_EVENT, first: 1) {
-            nodes {
-              ... on ReadyForReviewEvent {
-                createdAt
-              }
-            }
-          }
-        }
-      }
-      
-      query ($q: String!, $limit: Int = 20) {
-        search(first: $limit, type: ISSUE, query: $q) {
-          nodes {
-            ...pr
-          }
-        }
-      }`, {
+            const response = yield octokit.graphql(query, {
                 q: `is:pr is:open draft:false repo:${repoWithOwner}`
             });
             core.debug('fetch pull request data:');

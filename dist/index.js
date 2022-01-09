@@ -42,6 +42,29 @@ exports.run = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const dayjs_1 = __importDefault(__nccwpck_require__(7401));
+const getTargetPullRequests = (pullRequests, hoursBeforeLabelAdd, skipApprovedPullRequest) => {
+    return pullRequests
+        .map(pullRequest => {
+        const createdAt = pullRequest.timelineItems.nodes.length === 0
+            ? pullRequest.createdAt
+            : pullRequest.timelineItems.nodes[0].createdAt;
+        const from = (0, dayjs_1.default)(createdAt);
+        const to = (0, dayjs_1.default)();
+        core.debug(`from: ${from.toISOString()}`);
+        core.debug(`to: ${to.toISOString()}`);
+        const diff = to.diff(from, 'hour');
+        core.debug(`waiting time for review: ${diff}`);
+        if (diff < parseInt(hoursBeforeLabelAdd, 10)) {
+            return;
+        }
+        if (skipApprovedPullRequest &&
+            pullRequest.reviewDecision === 'APPROVED') {
+            return;
+        }
+        return pullRequest;
+    })
+        .filter(v => v !== undefined);
+};
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -87,26 +110,7 @@ function run() {
             if (pullRequests.length === 0) {
                 return;
             }
-            const targetPullRequests = pullRequests
-                .map(pullRequest => {
-                const createdAt = pullRequest.timelineItems.nodes.length === 0
-                    ? pullRequest.createdAt
-                    : pullRequest.timelineItems.nodes[0].createdAt;
-                const readyForReviewAt = (0, dayjs_1.default)(createdAt);
-                const now = (0, dayjs_1.default)();
-                core.debug(`ready for review at: ${readyForReviewAt.toISOString()}`);
-                core.debug(`now: ${now.toISOString()}`);
-                const diff = now.diff(readyForReviewAt, 'hour');
-                core.debug(`waiting time for review: ${diff}`);
-                if (diff < parseInt(hoursBeforeLabelAdd, 10)) {
-                    return;
-                }
-                if (skipProcess && pullRequest.reviewDecision === 'APPROVED') {
-                    return;
-                }
-                return pullRequest;
-            })
-                .filter(v => v !== undefined);
+            const targetPullRequests = getTargetPullRequests(pullRequests, hoursBeforeLabelAdd, skipProcess === 'true');
             core.debug('get target pull request data:');
             core.debug(JSON.stringify(targetPullRequests));
             for (const pullRequest of targetPullRequests) {

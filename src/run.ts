@@ -21,6 +21,46 @@ type PullRequest = {
   }
 }
 
+type GetTargetPullRequests = (
+  pullRequests: PullRequest[],
+  hoursBeforeLabelAdd: string,
+  skipApprovedPullRequest: boolean
+) => (PullRequest | undefined)[]
+
+const getTargetPullRequests: GetTargetPullRequests = (
+  pullRequests,
+  hoursBeforeLabelAdd,
+  skipApprovedPullRequest
+) => {
+  return pullRequests
+    .map(pullRequest => {
+      const createdAt =
+        pullRequest.timelineItems.nodes.length === 0
+          ? pullRequest.createdAt
+          : pullRequest.timelineItems.nodes[0].createdAt
+      const from = dayjs(createdAt)
+      const to = dayjs()
+      core.debug(`from: ${from.toISOString()}`)
+      core.debug(`to: ${to.toISOString()}`)
+      const diff = to.diff(from, 'hour')
+      core.debug(`waiting time for review: ${diff}`)
+
+      if (diff < parseInt(hoursBeforeLabelAdd, 10)) {
+        return
+      }
+
+      if (
+        skipApprovedPullRequest &&
+        pullRequest.reviewDecision === 'APPROVED'
+      ) {
+        return
+      }
+
+      return pullRequest
+    })
+    .filter(v => v !== undefined)
+}
+
 export async function run(): Promise<void> {
   try {
     const hoursBeforeLabelAdd = core.getInput('hours-before-label-add', {
@@ -72,30 +112,11 @@ export async function run(): Promise<void> {
       return
     }
 
-    const targetPullRequests = pullRequests
-      .map(pullRequest => {
-        const createdAt =
-          pullRequest.timelineItems.nodes.length === 0
-            ? pullRequest.createdAt
-            : pullRequest.timelineItems.nodes[0].createdAt
-        const readyForReviewAt = dayjs(createdAt)
-        const now = dayjs()
-        core.debug(`ready for review at: ${readyForReviewAt.toISOString()}`)
-        core.debug(`now: ${now.toISOString()}`)
-        const diff = now.diff(readyForReviewAt, 'hour')
-        core.debug(`waiting time for review: ${diff}`)
-
-        if (diff < parseInt(hoursBeforeLabelAdd, 10)) {
-          return
-        }
-
-        if (skipProcess && pullRequest.reviewDecision === 'APPROVED') {
-          return
-        }
-
-        return pullRequest
-      })
-      .filter(v => v !== undefined)
+    const targetPullRequests = getTargetPullRequests(
+      pullRequests,
+      hoursBeforeLabelAdd,
+      skipProcess === 'true'
+    )
 
     core.debug('get target pull request data:')
     core.debug(JSON.stringify(targetPullRequests))

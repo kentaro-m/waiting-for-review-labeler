@@ -11,7 +11,8 @@ name: Waiting For Review Labeler
 
 on:
   schedule:
-    - cron: '*/2 * * * *'
+    # Crontab Every Hour
+    - cron: '0 * * * *'
 
 jobs:
   action:

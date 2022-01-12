@@ -27,7 +27,7 @@ type GetTargetPullRequests = (
   skipApprovedPullRequest: boolean
 ) => (PullRequest | undefined)[]
 
-const getTargetPullRequests: GetTargetPullRequests = (
+export const getTargetPullRequests: GetTargetPullRequests = (
   pullRequests,
   hoursBeforeLabelAdd,
   skipApprovedPullRequest
@@ -40,8 +40,6 @@ const getTargetPullRequests: GetTargetPullRequests = (
           : pullRequest.timelineItems.nodes[0].createdAt
       const from = dayjs(createdAt)
       const to = dayjs()
-      core.debug(`from: ${from.toISOString()}`)
-      core.debug(`to: ${to.toISOString()}`)
       const diff = to.diff(from, 'hour')
       core.debug(`waiting time for review: ${diff}`)
 

@@ -38,7 +38,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.run = void 0;
+exports.run = exports.getTargetPullRequests = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const dayjs_1 = __importDefault(__nccwpck_require__(7401));
@@ -50,8 +50,6 @@ const getTargetPullRequests = (pullRequests, hoursBeforeLabelAdd, skipApprovedPu
             : pullRequest.timelineItems.nodes[0].createdAt;
         const from = (0, dayjs_1.default)(createdAt);
         const to = (0, dayjs_1.default)();
-        core.debug(`from: ${from.toISOString()}`);
-        core.debug(`to: ${to.toISOString()}`);
         const diff = to.diff(from, 'hour');
         core.debug(`waiting time for review: ${diff}`);
         if (diff < parseInt(hoursBeforeLabelAdd, 10)) {
@@ -65,6 +63,7 @@ const getTargetPullRequests = (pullRequests, hoursBeforeLabelAdd, skipApprovedPu
     })
         .filter(v => v !== undefined);
 };
+exports.getTargetPullRequests = getTargetPullRequests;
 const query = `
 fragment pr on PullRequest {
   ... on PullRequest {
@@ -113,7 +112,7 @@ function run() {
             if (pullRequests.length === 0) {
                 return;
             }
-            const targetPullRequests = getTargetPullRequests(pullRequests, hoursBeforeLabelAdd, skipProcess === 'true');
+            const targetPullRequests = (0, exports.getTargetPullRequests)(pullRequests, hoursBeforeLabelAdd, skipProcess === 'true');
             if (!targetPullRequests || targetPullRequests.length === 0) {
                 return;
             }

@@ -1,4 +1,4 @@
-name: Review Time Alert
+name: Waiting For Review Labeler
 
 on:
   workflow_dispatch:

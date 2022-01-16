@@ -26,7 +26,7 @@ describe('getTargetPullRequests', () => {
             }
           }
         ],
-        '3',
+        3,
         false
       )
     ).toEqual([
@@ -54,7 +54,7 @@ describe('getTargetPullRequests', () => {
             }
           }
         ],
-        '9',
+        9,
         false
       )
     ).toEqual([])
@@ -77,7 +77,7 @@ describe('getTargetPullRequests', () => {
             }
           }
         ],
-        '3',
+        3,
         false
       )
     ).toEqual([])
@@ -104,7 +104,7 @@ describe('getTargetPullRequests', () => {
             }
           }
         ],
-        '3',
+        3,
         true
       )
     ).toEqual([
@@ -142,8 +142,8 @@ describe('run', () => {
     github.context = {
       repo: {
         owner: 'kentaro-m',
-        repo: 'waiting-for-review-labeler',
-      },
+        repo: 'waiting-for-review-labeler'
+      }
     }
   })
 
@@ -151,8 +151,8 @@ describe('run', () => {
     const octokit: any = {
       rest: {
         issues: {
-          addLabels: jest.fn(),
-        },
+          addLabels: jest.fn()
+        }
       },
       graphql: jest.fn()
     }
@@ -168,11 +168,13 @@ describe('run', () => {
               nodes: []
             }
           }
-        ],
+        ]
       }
     }))
-    
-    const spy = jest.spyOn(octokit.rest.issues, 'addLabels').mockImplementation(() => {})
+
+    const spy = jest
+      .spyOn(octokit.rest.issues, 'addLabels')
+      .mockImplementation(() => {})
 
     await run()
 
@@ -180,38 +182,40 @@ describe('run', () => {
       owner: 'kentaro-m',
       repo: 'waiting-for-review-labeler',
       issue_number: 1,
-      labels: [ 'waiting for review' ]
+      labels: ['waiting for review']
     })
   })
 
-  test('don\'t add a label to a pull request if pull request search results are not found.', async () => {
+  test("don't add a label to a pull request if pull request search results are not found.", async () => {
     const octokit: any = {
       rest: {
         issues: {
-          addLabels: jest.fn(),
-        },
+          addLabels: jest.fn()
+        }
       },
       graphql: jest.fn()
     }
     jest.spyOn(github, 'getOctokit').mockImplementation(() => octokit)
     jest.spyOn(octokit, 'graphql').mockImplementation(async () => ({
       search: {
-        nodes: [],
+        nodes: []
       }
     }))
-    const spy = jest.spyOn(octokit.rest.issues, 'addLabels').mockImplementation(() => {})
+    const spy = jest
+      .spyOn(octokit.rest.issues, 'addLabels')
+      .mockImplementation(() => {})
 
     await run()
 
     expect(spy).not.toBeCalled()
   })
 
-  test('don\'t add a label to a pull request if target pull requests are not exist.', async () => {
+  test("don't add a label to a pull request if target pull requests are not exist.", async () => {
     const octokit: any = {
       rest: {
         issues: {
-          addLabels: jest.fn(),
-        },
+          addLabels: jest.fn()
+        }
       },
       graphql: jest.fn()
     }
@@ -227,10 +231,60 @@ describe('run', () => {
               nodes: []
             }
           }
-        ],
+        ]
       }
     }))
-    const spy = jest.spyOn(octokit.rest.issues, 'addLabels').mockImplementation(() => {})
+    const spy = jest
+      .spyOn(octokit.rest.issues, 'addLabels')
+      .mockImplementation(() => {})
+
+    await run()
+
+    expect(spy).not.toBeCalled()
+  })
+
+  test("don't add a label to a pull request if hours-before-label-add is not a number.", async () => {
+    const octokit: any = {
+      rest: {
+        issues: {
+          addLabels: jest.fn()
+        }
+      },
+      graphql: jest.fn()
+    }
+    jest.spyOn(github, 'getOctokit').mockImplementation(() => octokit)
+    jest.spyOn(octokit, 'graphql').mockImplementation(async () => ({
+      search: {
+        nodes: [
+          {
+            number: 1,
+            createdAt: '2022-01-08T05:00:00Z',
+            reviewDecision: null,
+            timelineItems: {
+              nodes: []
+            }
+          }
+        ]
+      }
+    }))
+    jest.spyOn(core, 'getInput').mockImplementation((name: string) => {
+      switch (name) {
+        case 'repo-token':
+          return 'token'
+        case 'hours-before-label-add':
+          return 'foo'
+        case 'label-name':
+          return 'waiting for review'
+        case 'skip-approved-pull-request':
+          return 'false'
+        default:
+          ''
+      }
+      return ''
+    })
+    const spy = jest
+      .spyOn(octokit.rest.issues, 'addLabels')
+      .mockImplementation(() => {})
 
     await run()
 

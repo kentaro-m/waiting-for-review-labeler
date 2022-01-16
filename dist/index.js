@@ -52,7 +52,7 @@ const getTargetPullRequests = (pullRequests, hoursBeforeLabelAdd, skipApprovedPu
         const to = (0, dayjs_1.default)();
         const diff = to.diff(from, 'hour');
         core.debug(`waiting time for review: ${diff}`);
-        if (diff < parseInt(hoursBeforeLabelAdd, 10)) {
+        if (diff < hoursBeforeLabelAdd) {
             return;
         }
         if (skipApprovedPullRequest &&
@@ -112,7 +112,11 @@ function run() {
             if (pullRequests.length === 0) {
                 return;
             }
-            const targetPullRequests = (0, exports.getTargetPullRequests)(pullRequests, hoursBeforeLabelAdd, skipProcess === 'true');
+            const hours = parseInt(hoursBeforeLabelAdd, 10);
+            if (isNaN(hours)) {
+                return;
+            }
+            const targetPullRequests = (0, exports.getTargetPullRequests)(pullRequests, hours, skipProcess === 'true');
             if (!targetPullRequests || targetPullRequests.length === 0) {
                 return;
             }

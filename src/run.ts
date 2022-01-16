@@ -23,7 +23,7 @@ type PullRequest = {
 
 type GetTargetPullRequests = (
   pullRequests: PullRequest[],
-  hoursBeforeLabelAdd: string,
+  hoursBeforeLabelAdd: number,
   skipApprovedPullRequest: boolean
 ) => (PullRequest | undefined)[]
 
@@ -43,7 +43,7 @@ export const getTargetPullRequests: GetTargetPullRequests = (
       const diff = to.diff(from, 'hour')
       core.debug(`waiting time for review: ${diff}`)
 
-      if (diff < parseInt(hoursBeforeLabelAdd, 10)) {
+      if (diff < hoursBeforeLabelAdd) {
         return
       }
 
@@ -111,9 +111,15 @@ export async function run(): Promise<void> {
       return
     }
 
+    const hours = parseInt(hoursBeforeLabelAdd, 10)
+
+    if (isNaN(hours)) {
+      return
+    }
+
     const targetPullRequests = getTargetPullRequests(
       pullRequests,
-      hoursBeforeLabelAdd,
+      hours,
       skipProcess === 'true'
     )
 

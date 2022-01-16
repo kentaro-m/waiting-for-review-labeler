@@ -126,7 +126,7 @@ describe('run', () => {
       switch (name) {
         case 'repo-token':
           return 'token'
-        case 'hours-before-label-add':
+        case 'hours-before-add-label':
           return '3'
         case 'label-name':
           return 'waiting for review'
@@ -243,7 +243,7 @@ describe('run', () => {
     expect(spy).not.toBeCalled()
   })
 
-  test("don't add a label to a pull request if hours-before-label-add is not a number.", async () => {
+  test("don't add a label to a pull request if hours-before-add-label is not a number.", async () => {
     const octokit: any = {
       rest: {
         issues: {
@@ -271,7 +271,7 @@ describe('run', () => {
       switch (name) {
         case 'repo-token':
           return 'token'
-        case 'hours-before-label-add':
+        case 'hours-before-add-label':
           return 'foo'
         case 'label-name':
           return 'waiting for review'

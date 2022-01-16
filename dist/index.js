@@ -42,7 +42,7 @@ exports.run = exports.getTargetPullRequests = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const dayjs_1 = __importDefault(__nccwpck_require__(7401));
-const getTargetPullRequests = (pullRequests, hoursBeforeLabelAdd, skipApprovedPullRequest) => {
+const getTargetPullRequests = (pullRequests, hoursBeforeAddLabel, skipApprovedPullRequest) => {
     return pullRequests
         .map(pullRequest => {
         const createdAt = pullRequest.timelineItems.nodes.length === 0
@@ -52,7 +52,7 @@ const getTargetPullRequests = (pullRequests, hoursBeforeLabelAdd, skipApprovedPu
         const to = (0, dayjs_1.default)();
         const diff = to.diff(from, 'hour');
         core.debug(`waiting time for review: ${diff}`);
-        if (diff < hoursBeforeLabelAdd) {
+        if (diff < hoursBeforeAddLabel) {
             return;
         }
         if (skipApprovedPullRequest &&
@@ -90,7 +90,7 @@ query ($q: String!, $limit: Int = 20) {
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const hoursBeforeLabelAdd = core.getInput('hours-before-label-add', {
+            const hoursBeforeAddLabel = core.getInput('hours-before-add-label', {
                 required: true
             });
             const labelName = core.getInput('label-name', {
@@ -112,7 +112,7 @@ function run() {
             if (pullRequests.length === 0) {
                 return;
             }
-            const hours = parseInt(hoursBeforeLabelAdd, 10);
+            const hours = parseInt(hoursBeforeAddLabel, 10);
             if (isNaN(hours)) {
                 return;
             }

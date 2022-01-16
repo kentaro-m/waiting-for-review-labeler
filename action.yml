@@ -6,7 +6,7 @@ inputs:
     description: 'Token for the repository. Can be passed in using `{{ secrets.GITHUB_TOKEN }}`.'
     required: false
     default: ${{ github.token }}
-  hours-before-label-add:
+  hours-before-add-label:
     required: true
     description: 'The number of hours to wait to add label to a pull request after it being opened or ready for review.'
     default: 24

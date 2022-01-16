@@ -23,13 +23,13 @@ type PullRequest = {
 
 type GetTargetPullRequests = (
   pullRequests: PullRequest[],
-  hoursBeforeLabelAdd: number,
+  hoursBeforeAddLabel: number,
   skipApprovedPullRequest: boolean
 ) => (PullRequest | undefined)[]
 
 export const getTargetPullRequests: GetTargetPullRequests = (
   pullRequests,
-  hoursBeforeLabelAdd,
+  hoursBeforeAddLabel,
   skipApprovedPullRequest
 ) => {
   return pullRequests
@@ -43,7 +43,7 @@ export const getTargetPullRequests: GetTargetPullRequests = (
       const diff = to.diff(from, 'hour')
       core.debug(`waiting time for review: ${diff}`)
 
-      if (diff < hoursBeforeLabelAdd) {
+      if (diff < hoursBeforeAddLabel) {
         return
       }
 
@@ -85,7 +85,7 @@ query ($q: String!, $limit: Int = 20) {
 
 export async function run(): Promise<void> {
   try {
-    const hoursBeforeLabelAdd = core.getInput('hours-before-label-add', {
+    const hoursBeforeAddLabel = core.getInput('hours-before-add-label', {
       required: true
     })
     const labelName = core.getInput('label-name', {
@@ -111,7 +111,7 @@ export async function run(): Promise<void> {
       return
     }
 
-    const hours = parseInt(hoursBeforeLabelAdd, 10)
+    const hours = parseInt(hoursBeforeAddLabel, 10)
 
     if (isNaN(hours)) {
       return

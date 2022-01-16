@@ -1,6 +1,8 @@
 # Waiting For Review Labeler
 An action for adding label to a pull request after it being opened or ready for review for more than certain hours.
 
+![](./pr-cycle-time.svg)
+
 ## :arrow_forward: Usage
 
 ### Create workflow

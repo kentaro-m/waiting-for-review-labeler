@@ -18,6 +18,9 @@ inputs:
     required: false
     description: 'Skip adding label when a pull request review status is approved.'
     default: false
+branding:
+  icon: 'bookmark'
+  color: 'yellow'
 runs:
   using: 'node12'
   main: 'dist/index.js'

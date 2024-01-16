@@ -45,9 +45,9 @@ export const getTargetPullRequests: GetTargetPullRequests = (
 
       //Use dayjs day() function which returns 0-6 for the day of the week for that date object to check for PRs made on Thurs/Fri
       if(from.day() === 4 || from.day() === 5) {
-        hoursBeforeAddLabel += 48 //Add 48 hours to the limit to account for the weekend
+        hoursBeforeAddLabel += 1 //Add 48 hours to the limit to account for the weekend
       }
-      
+
       if (diff < hoursBeforeAddLabel) {
         return
       }

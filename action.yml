@@ -9,11 +9,11 @@ inputs:
   hours-before-add-label:
     required: true
     description: 'The number of hours to wait to add label to a pull request after it being opened or ready for review.'
-    default: 24
+    default: 48
   label-name:
     required: false
     description: 'The name of label to add it to a pull request after it being opened or ready for review.'
-    default: 'waiting for review'
+    default: 'needs-review'
   skip-approved-pull-request:
     required: false
     description: 'Skip adding label when a pull request review status is approved.'

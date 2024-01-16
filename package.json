@@ -15,14 +15,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kentaro-m/waiting-for-review-labeler.git"
+    "url": "git+https://github.com/EricStrohl/waiting-for-review-labeler.git"
   },
   "keywords": [
     "actions",
     "node",
     "setup"
   ],
-  "author": "kentaro-m",
+  "author": "MasonStrohl",
   "license": "MIT",
   "dependencies": {
     "@actions/core": "1.6.0",
